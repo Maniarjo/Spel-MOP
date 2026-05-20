@@ -6,6 +6,10 @@ typedef struct {
   int duration_micro;
 } Note;
 
+// Frequency periods for each keypad button (in microseconds)
+// These are used to generate the frequencies when buttons are pressed
+extern uint32_t periods[];
+
 #define TEMPO 138 // Change this if you want!
 #define UNIT 15000000 / TEMPO
 #define NOTES                                                                  \
