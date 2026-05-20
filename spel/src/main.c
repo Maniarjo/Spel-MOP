@@ -48,6 +48,12 @@ static uint32_t current_period = 0;
 static uint8_t last_key_pressed = 0xFF;
 
 // ============================================================================
+// FUNCTION DECLARATIONS
+// ============================================================================
+
+void display_binary_led(uint8_t value);
+
+// ============================================================================
 // INTERRUPTS AND HANDLERS
 // ============================================================================
 
@@ -76,18 +82,29 @@ void exti_handler() {
   uint8_t key = keypad();
   
   if (key != 0xFF) {
-    // Key pressed - store and light up the LED
+    // Key pressed - display button number in binary on LEDs
     last_key_pressed = key;
-    *GPIOD_BSR = (key << 8);  // Set LED for this key
+    display_binary_led(key);
   } else {
-    // Key released - turn off LED
-    *GPIOD_BCR = 0xFF00;  // Clear all LEDs
+    // Key released - turn off all LEDs
+    display_binary_led(0);
   }
 }
 
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
+
+// Display button number in binary on LED bar (GPIOD [8:15])
+// Button 0-15 displays as 4-bit binary on the 8 LEDs
+// Example: Button 5 (0101 in binary) lights up LEDs [8, 10]
+void display_binary_led(uint8_t value) {
+  // Clear all LEDs first
+  *GPIOD_BCR = 0xFF00;
+  // Set LEDs according to binary representation of value
+  // Bits [8:15] correspond to binary bits [0:7]
+  *GPIOD_BSR = (value << 8);
+}
 
 // Play a tone for the given button
 void play_tone(uint8_t button, uint32_t duration_ms) {
@@ -96,8 +113,8 @@ void play_tone(uint8_t button, uint32_t duration_ms) {
   current_period = periods[button];
   remaining_duration = duration_ms * 1000;  // Convert ms to us
   
-  // Light up the corresponding LED
-  *GPIOD_BSR = (button << 8);
+  // Display button number in binary on LED bargraph
+  display_binary_led(button);
   
   // Start the buzzer
   systick_periodic_micro(current_period);
@@ -107,9 +124,9 @@ void play_tone(uint8_t button, uint32_t duration_ms) {
     // Spin wait
   }
   
-  // Stop buzzer and LED
+  // Stop buzzer and clear LED display
   systick_stop();
-  *GPIOD_BCR = (button << 8);
+  display_binary_led(0);  // Turn off all LEDs
 }
 
 // Wait for player input with timeout
