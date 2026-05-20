@@ -1,0 +1,17 @@
+{
+    "mdx07-templates.appName": "md307-template-dev",
+    "files.associations": {
+        "*.s": "riscv"
+    },
+    "errorLens.messageBackgroundMode": "line",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/inc",
+        "${workspaceFolder}/lib/inc",
+        "${workspaceFolder}/src",
+
+    ],
+    "C_Cpp.default.compilerPath": "${config:mdx07-templates.riscvToolchainPath}/riscv32-unknown-elf-gcc",
+    "cortex-debug.armToolchainPrefix": "riscv32-unknown-elf",
+    "mcu-debug.peripheral-viewer.svdAddrGapThreshold": -1,
+    "peripheral-inspector.svdAddrGapThreshold": -1
+}
