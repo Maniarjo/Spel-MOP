@@ -1,5 +1,9 @@
 {
-    "mdx07-templates.appName": "md307-template-dev",
+    "mdx07-templates.appName": "spel",
+    "mdx07-templates.riscvToolchainPath": "riscv32-unknown-elf-",
+    "mdx07-templates.makePath": "",
+    "mdx07-templates.makeExecutable": "make",
+    "mdx07-templates.openocdPath": "openocd",
     "files.associations": {
         "*.s": "riscv"
     },
@@ -7,11 +11,13 @@
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/inc",
         "${workspaceFolder}/lib/inc",
-        "${workspaceFolder}/src",
-
+        "${workspaceFolder}/src"
     ],
-    "C_Cpp.default.compilerPath": "${config:mdx07-templates.riscvToolchainPath}/riscv32-unknown-elf-gcc",
+    "C_Cpp.default.compilerPath": "riscv32-unknown-elf-gcc",
+    "C_Cpp.default.cppStandard": "c99",
+    "C_Cpp.default.intelliSenseEngine": "disabled",
     "cortex-debug.armToolchainPrefix": "riscv32-unknown-elf",
+    "cortex-debug.openocdPath": "openocd",
     "mcu-debug.peripheral-viewer.svdAddrGapThreshold": -1,
     "peripheral-inspector.svdAddrGapThreshold": -1
 }
