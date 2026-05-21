@@ -3,6 +3,7 @@
 #include "interrupts.h"
 #include "keypad.h"
 #include "systick.h"
+#define DBGCALL
 #include "tftmd307.h"
 #include "vector_table.h"
 #include <stdint.h>
@@ -21,6 +22,11 @@
 #define GRID_START_X 45
 #define GRID_START_Y 92
 #define BUTTON_SPACING 10
+
+#ifndef LCD_W
+#define LCD_W 480
+#define LCD_H 320
+#endif
 
 #define FONT_WIDTH 5
 #define FONT_HEIGHT 7
