@@ -31,6 +31,8 @@ GCC_PATH ?= C:/cseapp/tools/gcc-riscv32/bin/
 CC = "$(GCC_PATH)riscv32-unknown-elf-gcc"
 OBJCOPY = "$(GCC_PATH)riscv32-unknown-elf-objcopy"
 OBJDUMP = "$(GCC_PATH)riscv32-unknown-elf-objdump"
+export TMP := $(CURDIR)/$(BUILD_DIR)/tmp
+export TEMP := $(TMP)
 
 
 # compiler and linker flags
@@ -49,9 +51,11 @@ endif
 
 # check if os is windows, imitate UNIX behavior
 ifeq ($(OS), Windows_NT)
+    export PATH := $(GCC_PATH);$(PATH)
     MKDIR = powershell mkdir -Force
     RM = powershell Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
 else
+    export PATH := $(GCC_PATH):$(PATH)
     MKDIR = mkdir -p
     RM = rm -rf
 endif
@@ -68,6 +72,7 @@ $(TARGET_EXEC): $(OBJS)
 # compile .s and .c-files
 $(OBJ_DIR)/%.o: %
 	$(MKDIR) -p $(dir $@)
+	$(MKDIR) -p $(BUILD_DIR)/tmp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 

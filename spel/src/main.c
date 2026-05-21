@@ -235,7 +235,7 @@ static void draw_button_grid(void) {
 static void draw_score(uint8_t level) {
   char buffer[16];
   tft_lcd_rect(0, 0, 130, 35, TFT_BLACK, 1);
-  sprintf(buffer, "LEVEL:%u", level);
+  sprintf(buffer, "LEVEL:%u", (unsigned int)level);
   lcd_puts(10, 10, buffer, TFT_WHITE, TFT_BLACK, 2);
 }
 
@@ -335,7 +335,7 @@ static void display_game_over_screen(uint8_t final_level) {
   char buffer[24];
   tft_lcd_rect(0, 0, LCD_W - 1, LCD_H - 1, TFT_BLACK, 1);
   lcd_puts(160, 80, "GAME OVER", TFT_RED, TFT_BLACK, 3);
-  sprintf(buffer, "LEVEL:%u", final_level);
+  sprintf(buffer, "LEVEL:%u", (unsigned int)final_level);
   lcd_puts(170, 150, buffer, TFT_WHITE, TFT_BLACK, 2);
   lcd_puts(150, 220, "PRESS ANY KEY", TFT_CYAN, TFT_BLACK, 2);
 }

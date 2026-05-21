@@ -1019,7 +1019,7 @@ static void draw_score(uint8_t level) {
 20000bf8:	00000593          	li	a1,0
 20000bfc:	00000513          	li	a0,0
 20000c00:	6b2010ef          	jal	200022b2 <tft_lcd_rect>
-  sprintf(buffer, "LEVEL:%u", level);
+  sprintf(buffer, "LEVEL:%u", (unsigned int)level);
 20000c04:	fdf44783          	lbu	a5,-33(s0)
 20000c08:	fe040713          	addi	a4,s0,-32
 20000c0c:	00078613          	mv	a2,a5
@@ -1469,7 +1469,7 @@ static void display_game_over_screen(uint8_t final_level) {
 20001110:	05000593          	li	a1,80
 20001114:	0a000513          	li	a0,160
 20001118:	83dff0ef          	jal	20000954 <lcd_puts>
-  sprintf(buffer, "LEVEL:%u", final_level);
+  sprintf(buffer, "LEVEL:%u", (unsigned int)final_level);
 2000111c:	fcf44783          	lbu	a5,-49(s0)
 20001120:	fd840713          	addi	a4,s0,-40
 20001124:	00078613          	mv	a2,a5
