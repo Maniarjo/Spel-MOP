@@ -7,6 +7,18 @@
 #define GPIOD_BASE 0x40011400
 #define GPIOE_BASE 0x40011800
 
+// RCC register needed to enable the GPIO/AFIO clocks on the lab board.
+#define RCC_BASE       0x40021000
+#define RCC_APB2PCENR  ((volatile uint32_t *)(RCC_BASE + 0x18))
+#define RCC_AFIOEN     (1U << 0)
+#define RCC_IOPDEN     (1U << 5)
+#define RCC_IOPEEN     (1U << 6)
+
+#define KEYPAD_COL_MASK 0x000FU
+#define KEYPAD_ROW_MASK 0x00F0U
+#define LED_MASK        0xFF00U
+#define BUZZER_MASK     0x0001U
+
 // GPIO pointer macros
 #define GPIOD_CFGLR ((volatile uint32_t *)(GPIOD_BASE + 0x00))
 #define GPIOD_CFGHR ((volatile uint32_t *)(GPIOD_BASE + 0x04))
@@ -45,6 +57,6 @@ typedef struct {
 // Function prototypes
 
 // Initialize GPIO
-void init_gpio();
+void init_gpio(void);
 
 #endif

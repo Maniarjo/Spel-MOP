@@ -32,6 +32,6 @@ typedef struct {
 void systick_periodic_micro(uint32_t us);
 
 // Stop SysTick
-void systick_stop();
+void systick_stop(void);
 
 #endif

@@ -9,6 +9,6 @@
 // - EXTI1:   exti_handler()
 // - EXTI2:   exti_handler()
 // - EXTI3:   exti_handler()
-void init_vector_table();
+void init_vector_table(void);
 
 #endif

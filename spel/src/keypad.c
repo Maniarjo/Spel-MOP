@@ -1,39 +1,29 @@
 #include "gpio.h"
 #include "keypad.h"
 
-uint8_t keypad() {
+uint8_t keypad(void) {
   int row;
   int col;
   uint16_t idr;
-  
-  // släck alla rows (pull-up aktiv)
-  GPIOD->BSR = 0xF << 4;
-  
-  // scanna varje row
+
+  GPIOD->BSR = KEYPAD_ROW_MASK;
+
   for (row = 0; row < 4; row++) {
-    // aktivera denna row
-    GPIOD->BCR = 1 << (row + 4);
-    
-    // vänta på GPIO settling (500 ns)
-    // 2 MHz = 500 ns per cycle, så ca 100 iterationer
-    for (int i = 0; i < 100; i++) {
-      // waste cycles
+    GPIOD->BCR = 1U << (row + 4);
+
+    for (volatile int i = 0; i < 100; i++) {
     }
-    
-    // läs kolumner
+
     idr = GPIOD->IDR;
-    
-    // scanna varje kolumn
+
     for (col = 0; col < 4; col++) {
-      // kolumn är LOW om knappen trycks (pull-up)
-      if ((idr & (1 << col)) == 0) {
-        GPIOD->BCR = 0xF << 4;  // släck alla rows igen
-        return 4 * row + col;   // returnera knapp-ID
+      if ((idr & (1U << col)) == 0) {
+        GPIOD->BCR = KEYPAD_ROW_MASK;
+        return (uint8_t)(4 * row + col);
       }
     }
   }
-  
-  // ingen knapp tryckt
-  GPIOD->BCR = 0xF << 4;  // släck alla rows
-  return 0xFF;            // error code
+
+  GPIOD->BCR = KEYPAD_ROW_MASK;
+  return 0xFF;
 }

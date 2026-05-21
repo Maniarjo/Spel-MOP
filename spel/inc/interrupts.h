@@ -4,6 +4,6 @@
 // Function prototypes
 
 // Initialize interrupts
-void init_interrupts();
+void init_interrupts(void);
 
 #endif

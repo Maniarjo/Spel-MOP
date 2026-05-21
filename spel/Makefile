@@ -10,6 +10,9 @@ TARGET_LST = $(BUILD_DIR)/$(APP_NAME).lst
 # linker script
 LINKER_SCRIPT = device/md307-ram.x
 
+# Lab hardware is the default target. Use BUILD_TARGET=0 for simulator builds.
+BUILD_TARGET ?= 1
+
 # directories containing source files and libraries
 BUILD_DIR = build
 OBJ_DIR = $(BUILD_DIR)/obj
@@ -19,10 +22,12 @@ LIB_DIRS = . lib
 
 # paths to source, object and dependency files
 SRCS := $(foreach d, $(SRC_DIRS), $(wildcard $(d)/*.c) $(wildcard $(d)/*.s $(wildcard $(d)/*.S)))
+SRCS := $(filter-out src/main_jaaa.c,$(SRCS))
 OBJS := $(SRCS:%=$(OBJ_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
 # riscv gcc toolchain paths
+GCC_PATH ?= C:/cseapp/tools/gcc-riscv32/bin/
 CC = "$(GCC_PATH)riscv32-unknown-elf-gcc"
 OBJCOPY = "$(GCC_PATH)riscv32-unknown-elf-objcopy"
 OBJDUMP = "$(GCC_PATH)riscv32-unknown-elf-objdump"
@@ -45,9 +50,10 @@ endif
 # check if os is windows, imitate UNIX behavior
 ifeq ($(OS), Windows_NT)
     MKDIR = powershell mkdir -Force
-    RM = powershell rm -Force
+    RM = powershell Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
 else
     MKDIR = mkdir -p
+    RM = rm -rf
 endif
 
 
@@ -68,6 +74,6 @@ $(OBJ_DIR)/%.o: %
 .PHONY: clean
 
 clean:
-	$(RM) -r $(BUILD_DIR)
+	$(RM) $(BUILD_DIR)
 
 -include $(DEPS)
