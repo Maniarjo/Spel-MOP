@@ -5,28 +5,35 @@ uint8_t keypad() {
   int row;
   int col;
   uint16_t idr;
-  // Deactivate all rows
+  
+  // släck alla rows (pull-up aktiv)
   GPIOD->BSR = 0xF << 4;
-  // For each row:
+  
+  // scanna varje row
   for (row = 0; row < 4; row++) {
-    // Activate row
+    // aktivera denna row
     GPIOD->BCR = 1 << (row + 4);
-    // pin update speed set to 2 MHz
-    // => need to wait for 500 ns before reading columns
-    // but can't overwrite systick, so we'll waste time with an empty loop
+    
+    // vänta på GPIO settling (500 ns)
+    // 2 MHz = 500 ns per cycle, så ca 100 iterationer
     for (int i = 0; i < 100; i++) {
+      // waste cycles
     }
-    // For each column:
-    // if column is active, activate all rows and return key index
+    
+    // läs kolumner
     idr = GPIOD->IDR;
+    
+    // scanna varje kolumn
     for (col = 0; col < 4; col++) {
+      // kolumn är LOW om knappen trycks (pull-up)
       if ((idr & (1 << col)) == 0) {
-        GPIOD->BCR = 0xF << 4;
-        return 4 * row + col;
+        GPIOD->BCR = 0xF << 4;  // släck alla rows igen
+        return 4 * row + col;   // returnera knapp-ID
       }
     }
   }
-  // No key pressed. Activate all rows and return error code
-  GPIOD->BCR = 0xF << 4;
-  return 0xFF;
+  
+  // ingen knapp tryckt
+  GPIOD->BCR = 0xF << 4;  // släck alla rows
+  return 0xFF;            // error code
 }

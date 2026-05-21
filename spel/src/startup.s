@@ -1,23 +1,32 @@
 .extern main, _crt_init, _crt_deinit
 .section .start_section
 
+# Startpoint för programmet
 _start: 
-    # Set stackpointer to the top of RAM
-    la sp,0x2001C000
-    # Call C runtime initialization
-    # This sets up the .data and .bss sections, starts PLL and clocks, etc. 
-    jal _crt_init
+  # Sätt stack pointer till toppen av RAM
+  la sp, 0x2001C000
+  
+  # Anropa C runtime init
+  # Sätter upp .data och .bss sections, startar PLL osv
+  jal _crt_init
 
-    # This is a fancy way of enabling interrupts and jumping to main.
-    # (Since we set MPIE=1 and then `mret`, we go "back" to having interrupts enabled)
-    la t0, main
-    la ra, exit
-    csrw mepc, t0
-    li   t1, (3 << 11) | (1 << 7) | (1 << 13)  # MPP=Machine, MPIE=1, FS=Initial (enable FPU)
-    csrw mstatus, t1
-    mret
+  # Sätt up för interrupt-mode och hoppa till main
+  # Vi sätter MPIE=1 så interrupts är enabled vid main()
+  la t0, main       # main address
+  la ra, exit       # return address om main returnerar
+  csrw mepc, t0     # sätt exception program counter
+  
+  # Status register setup:
+  # MPP = Machine mode (bit 11:10)
+  # MPIE = Enable interrupts (bit 7)
+  # FS = FPU initial (bit 14:13)
+  li t1, (3 << 11) | (1 << 7) | (1 << 13)
+  csrw mstatus, t1
+  
+  # Jump till main med interrupts enabled
+  mret
 
-# Call C runtime de-initialization (never reached)
+# Cleanup om main returnerar (borde inte hända)
 exit: 
-    jal _crt_deinit
-    j .
+  jal _crt_deinit
+  j .  # infinite loop
